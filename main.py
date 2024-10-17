@@ -20,7 +20,7 @@ def main():
         
         screen.fill("black")        # Fills the screen black
         player.draw(screen)         # Draws the player on top of it
-        
+        player.update(dt)
         pygame.display.flip()       # Updates the screen THIS HAS TO BE AT THE BOTTOM
 
         # Limit framerate to 60 (dt = delta time)
