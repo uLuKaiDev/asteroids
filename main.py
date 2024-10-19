@@ -42,16 +42,20 @@ def main():
                 return
         
         screen.fill("black")        
-        text_surface = font.render((f"Score: {str(score.player_score)}"), True,'white')
-        screen.blit(text_surface,(10,10))
+
+        lives_text = font.render((f"Lives: {str(player.lives)}"), True,'white')
+        score_text = font.render((f"Score: {str(score.player_score)}"), True,'white')
+
+        screen.blit(lives_text,(10,SCREEN_HEIGHT-70))
+        screen.blit(score_text,(10,SCREEN_HEIGHT-40))
+        
         
         for obj in updatable:
             obj.update(dt)          # Updates the rotation and speed
         
         for asteroid in asteroids:
             if asteroid.collides_with(player):
-                print('Game Over!')
-                sys.exit()
+                player.get_hit()
             
             for shot in shots:
                 if asteroid.collides_with(shot):

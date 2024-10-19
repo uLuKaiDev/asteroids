@@ -1,3 +1,4 @@
+import sys
 import pygame
 from constants import *
 from circleshape import CircleShape
@@ -9,6 +10,8 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.invul_timer = 0
+        self.lives = PLAYER_LIVES
 
     def draw(self, screen):
         pygame.draw.polygon(screen,"white",self.triangle(),2)
@@ -18,6 +21,7 @@ class Player(CircleShape):
 
     def update(self, dt):
         self.shoot_timer -= dt
+        self.invul_timer -= dt
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -43,7 +47,16 @@ class Player(CircleShape):
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN
         shot = Shot(self.position.x, self.position.y)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
-        
+
+    def get_hit(self):
+        if self.invul_timer > 0:
+            return
+        if self.lives > 0:
+            self.lives -= 1
+            self.invul_timer = PLAYER_INVINCIBLE_WINDOW
+        else:
+            print('Game Over!')
+            sys.exit()
 
     # Triangle method provided by boot.dev
     def triangle(self):
