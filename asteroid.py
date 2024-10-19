@@ -6,6 +6,15 @@ from circleshape import *
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
+        
+        # The smaller the asteroid, the higher the points
+        if self.radius <= 20.0:
+            self.value = 3
+        elif 20.0 < self.radius <= 40.0:
+            self.value = 2
+        else:
+            self.value = 1
+        
 
     def draw(self, screen):
         pygame.draw.circle(screen, "white", self.position, self.radius, 2)

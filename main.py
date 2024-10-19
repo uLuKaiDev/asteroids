@@ -5,12 +5,17 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from score import Score
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    font = pygame.font.SysFont('Arial', 30)
+    
     clock = pygame.time.Clock()
+    running = True
+    score = Score(0)
     
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -31,12 +36,14 @@ def main():
 
     # Main game loop starts here"
     
-    while True:
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         
-        screen.fill("black")        # Fills the screen with black       
+        screen.fill("black")        
+        text_surface = font.render((f"Score: {str(score.player_score)}"), True,'white')
+        screen.blit(text_surface,(10,10))
         
         for obj in updatable:
             obj.update(dt)          # Updates the rotation and speed
@@ -48,17 +55,15 @@ def main():
             
             for shot in shots:
                 if asteroid.collides_with(shot):
-                    asteroid.split()
                     shot.kill()
-
+                    Score.update(score, asteroid.value)
+                    asteroid.split()
 
         for obj in drawable:        # Draws the items on the screen
             obj.draw(screen)
         
         pygame.display.flip()       # Updates the screen THIS HAS TO BE AT THE BOTTOM
-
-        # Limit framerate to 60 (dt = delta time)
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(60) / 1000  # Limit framerate to 60 (dt = delta time)
         
         # Main game loop ends here
 
